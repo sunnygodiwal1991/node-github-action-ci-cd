@@ -16,7 +16,7 @@ jobs:
           sudo apt update
           sudo apt install tree -y  
 
-      - name: Install awc-cli
+      - name: Install AWS-CLI
         run: |
           #!/bin/bash
           AWS_CLI=$(aws --version 2>&1)
@@ -38,12 +38,12 @@ jobs:
       - name: Install Docker
         run: |
           #!/bin/bash
-          AWS_CLI=$(sudo docker --version 2>&1)
+          DOCKER=$(sudo docker --version 2>&1)
           STATUS=$?         
 
           if [[ $STATUS -eq 0 ]]; then
-            echo "✅ AWS CLI detected"
-            echo "$AWS_CLI"
+            echo "✅ Docker detected"
+            echo "$DOCKER"
           else
             echo "❌ AWS CLI not detected"
             echo "Install AWS CLI on Runner..."
@@ -51,7 +51,7 @@ jobs:
             sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
             sudo apt update
-            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
             sudo docker --version
             sudo systemctl enable docker
             sudo systemctl restart docker           
