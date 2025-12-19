@@ -76,4 +76,7 @@ jobs:
           docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }} .
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
 
-        
+      - name: Deployment via argocd 
+        run: |
+        argocd login argocd.devsecops.com --username admin --password 3PYl4YwJUDJKp4I3 --insecure
+        argocd app list
