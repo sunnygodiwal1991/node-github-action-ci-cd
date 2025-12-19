@@ -1,0 +1,11 @@
+name: github-action-ci-cd
+
+on:
+  push:
+    branches: master
+
+
+Jobs:
+  echo:
+    run: echo "test"
+    
