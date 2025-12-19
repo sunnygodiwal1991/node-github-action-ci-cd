@@ -23,13 +23,11 @@ jobs:
         run: |
           #!/bin/bash
           AWS_CLI=$(aws --version 2>&1)
-          STATUS=$?
-
-          echo "$AWS_CLI"
+          STATUS=$?         
 
           if [[ $STATUS -eq 0 ]]; then
             echo "✅ AWS CLI detected"
-            cmd
+            echo "$AWS_CLI"
           else
             echo "❌ AWS CLI not detected"
             exit 1
