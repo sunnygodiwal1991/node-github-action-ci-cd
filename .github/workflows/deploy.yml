@@ -78,5 +78,5 @@ jobs:
 
       - name: Deployment via argocd 
         run: |
-        argocd login argocd.devsecops.com --username admin --password 3PYl4YwJUDJKp4I3 --insecure
-        argocd app list
+          argocd login argocd.devsecops.com --username admin --password 3PYl4YwJUDJKp4I3 --insecure
+          argocd app list
