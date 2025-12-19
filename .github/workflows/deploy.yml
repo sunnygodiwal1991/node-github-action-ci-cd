@@ -16,5 +16,5 @@ jobs:
 
       - name: Install requred packages
         run: |
-          apt update
-          apt install tree -y  
+          sudo apt update
+          sudo apt install tree -y  
