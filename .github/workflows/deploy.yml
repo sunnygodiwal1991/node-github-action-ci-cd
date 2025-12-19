@@ -35,9 +35,6 @@ jobs:
             aws --version            
           fi
 
-      - name: Check user
-        run: whoami
-
       - name: Configure AWS creds
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -45,11 +42,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }} 
 
-      - name: Who am I
+      - name: Validate IAM User
         run: aws sts get-caller-identity
 
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Build & Push Image
+        run: |
+          docker build -t node-app .
+          docker tag node-app:latest \
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/node-app:latest
+          docker push \
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/node-app:latest
 
  
                     
