@@ -22,9 +22,18 @@ jobs:
       - name: Install awc-cli
         run: |
           #!/bin/bash
-          aws --version
-          echo $?
+          AWS_CLI=$(aws --version 2>&1)
+          STATUS=$?
 
-          
+          echo "$AWS_CLI"
+
+          if [[ $STATUS -eq 0 ]]; then
+            echo "✅ AWS CLI detected"
+            cmd
+          else
+            echo "❌ AWS CLI not detected"
+            exit 1
+          fi
+                    
 
 
