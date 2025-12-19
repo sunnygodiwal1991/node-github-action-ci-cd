@@ -11,10 +11,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Install requred packages
-        run: |
-          sudo apt update
-          sudo apt install tree -y  
+      # - name: Install requred packages
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install tree -y  
 
       - name: Install AWS-CLI
         run: |
