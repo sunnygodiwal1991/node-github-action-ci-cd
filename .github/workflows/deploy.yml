@@ -19,6 +19,24 @@ jobs:
           sudo apt update
           sudo apt install tree -y  
 
-          
+      - name: Install awc-cli
+        run: |
+          ## Update repo
+          sudo apt update
+          sudo apt install -y curl unzip less
+
+          ## Download the AWS CLI bundle
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+          ## Zip extract करें
+          unzip awscliv2.zip
+
+          ## Installer चलाएँ
+          sudo ./aws/install
+
+          ## Verify
+          aws --version
 
           
+
+
