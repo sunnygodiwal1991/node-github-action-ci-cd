@@ -80,6 +80,3 @@ jobs:
           # docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:latest
 
 
-
-
-992528162043.dkr.ecr.us-east-1.amazonaws.com/dev/node-app:latest
