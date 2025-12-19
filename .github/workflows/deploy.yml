@@ -72,10 +72,12 @@ jobs:
 
       - name: Build & Push Image
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 992528162043.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           docker build -t dev/node-app .
-          docker tag dev/node-app:latest 992528162043.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:latest
-          docker push 992528162043.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:latest
+          docker tag dev/node-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:latest
+
+
  
                     
 
