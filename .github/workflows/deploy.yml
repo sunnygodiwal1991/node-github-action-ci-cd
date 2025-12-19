@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: Build Job
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: echo
