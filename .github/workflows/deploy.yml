@@ -67,36 +67,33 @@ jobs:
         run: aws sts get-caller-identity    
                          
 
-  checout-source-code:
+  Checkout Source Code:
     runs-on: self-hosted
     needs: basic-configuration
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v4    
+        uses: actions/checkout@v4  
 
-  build:
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source
+          path: .          
+
+  Build & Tag Docker Image:
     runs-on: self-hosted
-    needs: checout-source-code
+    needs: Checkout Source Code
     steps:
-      - name: Build Docker Image
-        run: echo "test"
-
+      - name: Build Docker image (with persistent cache)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
 
 #     steps:
-
-#       # - name: Configure AWS creds
-#       #   uses: aws-actions/configure-aws-credentials@v4
-#       #   with:
-#       #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#       #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#       #     aws-region: ${{ secrets.AWS_REGION }} 
-
-#       # - name: Validate IAM User
-#       #   run: aws sts get-caller-identity
-
-#       # - name: Checkout
-#       #   uses: actions/checkout@v4
 
 #       # - name: Build Docker image (with persistent cache)
 #       #   uses: docker/build-push-action@v5
