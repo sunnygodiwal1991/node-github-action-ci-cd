@@ -39,6 +39,8 @@ RUN chown -R ${APP_USER}:${APP_USER} ${APP_DIR}
 # Switch user
 USER ${APP_USER}
 
+# Container will be expose on below port
 EXPOSE 3000
 
+# Default command
 CMD ["node", "index.js"]
