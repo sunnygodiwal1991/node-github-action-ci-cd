@@ -23,18 +23,18 @@ COPY . .
 FROM node:24.12.0-alpine
 
 # Create non-root user (SECURITY 🔐)
-RUN addgroup -S nodeapp && adduser -S nodeapp -G nodeapp
+RUN addgroup -S ${APP_USER} && adduser -S ${APP_USER} -G ${APP_USER}
 
-WORKDIR /app
+WORKDIR ${APP_DIR}
 
 # Copy only required files from builder
-COPY --from=builder /app /app
+COPY --from=builder ${APP_DIR} ${APP_DIR}
 
 # Fix ownership
-RUN chown -R nodeapp:nodeapp /app
+RUN chown -R ${APP_USER}:${APP_USER} ${APP_DIR}
 
 # Switch to non-root user
-USER nodeapp
+USER ${APP_USER}
 
 EXPOSE 3000
 
