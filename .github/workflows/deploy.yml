@@ -54,7 +54,18 @@ jobs:
             sudo docker --version
             sudo systemctl enable docker
             sudo systemctl restart docker           
-          fi                 
+          fi      
+
+      - name: Configure AWS creds
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }} 
+
+      - name: Validate IAM User
+        run: aws sts get-caller-identity    
+                         
 
   build:
     runs-on: self-hosted
@@ -66,28 +77,6 @@ jobs:
 
 
 #     steps:
-  
-#       # - name: Install Docker
-#       #   run: |
-#       #     #!/bin/bash
-#       #     DOCKER=$(sudo docker --version 2>&1)
-#       #     STATUS=$?         
-
-#       #     if [[ $STATUS -eq 0 ]]; then
-#       #       echo "✅ Docker detected"
-#       #       echo "$DOCKER"
-#       #     else
-#       #       echo "❌ AWS CLI not detected"
-#       #       echo "Install AWS CLI on Runner..."
-#       #       sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
-#       #       sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-#       #       echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-#       #       sudo apt update
-#       #       sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-#       #       sudo docker --version
-#       #       sudo systemctl enable docker
-#       #       sudo systemctl restart docker           
-#       #     fi
 
 #       # - name: Configure AWS creds
 #       #   uses: aws-actions/configure-aws-credentials@v4
