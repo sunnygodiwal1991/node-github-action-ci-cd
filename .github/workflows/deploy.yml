@@ -84,11 +84,6 @@ jobs:
         with:
           clean: true        
 
-      # - uses: actions/upload-artifact@v4
-      #   with:
-      #     name: source
-      #     path: .          
-
   # Build-And-Tag-Docker-Image:
   #   runs-on: self-hosted
   #   needs: Checkout-Source-Code
@@ -106,9 +101,16 @@ jobs:
     runs-on: self-hosted
     needs: Checkout-Source-Code
     steps:
-      - name: ls -l
-        run: ls -l
-        
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }} .
+
+  Push-Docker-Image:
+    runs-on: self-hosted
+    needs: Build-And-Tag-Docker-Image
+    steps:
+      - name: Push Docker Image
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com 
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
+          
