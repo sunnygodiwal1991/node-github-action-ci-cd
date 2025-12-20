@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Install requred packages
         run: |
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo apt clean
           sudo apt update
           sudo apt install tree -y  
 
