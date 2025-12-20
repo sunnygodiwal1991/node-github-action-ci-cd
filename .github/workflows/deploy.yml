@@ -32,7 +32,29 @@ jobs:
             unzip awscliv2.zip
             sudo ./aws/install
             aws --version            
-          fi          
+          fi   
+
+      - name: Install Docker
+        run: |
+          #!/bin/bash
+          DOCKER=$(sudo docker --version 2>&1)
+          STATUS=$?         
+
+          if [[ $STATUS -eq 0 ]]; then
+            echo "✅ Docker detected"
+            echo "$DOCKER"
+          else
+            echo "❌ AWS CLI not detected"
+            echo "Install AWS CLI on Runner..."
+            sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+            sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt update
+            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+            sudo docker --version
+            sudo systemctl enable docker
+            sudo systemctl restart docker           
+          fi                 
 
   build:
     runs-on: self-hosted
@@ -43,43 +65,8 @@ jobs:
 
 
 
-# jobs:
-#   build:
-#     name: Build Job
-#     runs-on: self-hosted
-
 #     steps:
-#       # - name: Install requred packages
-#       #   run: |
-#       #     sudo rm -rf /var/lib/apt/lists/*
-#       #     sudo apt clean
-#       #     sudo apt update
-#       #     sudo apt install tree -y  
   
-#   build-1:
-#     name: Install AWS-CLI
-#     runs-on: self-hosted
-
-#     steps:
-#       - name: Install AWS-CLI
-#         run: |
-#           #!/bin/bash
-#           AWS_CLI=$(aws --version 2>&1)
-#           STATUS=$?         
-
-#           if [[ $STATUS -eq 0 ]]; then
-#             echo "✅ AWS CLI detected"
-#             echo "$AWS_CLI"
-#           else
-#             echo "❌ AWS CLI not detected"
-#             echo "Install AWS CLI on Runner..."
-#             sudo apt install -y curl unzip less
-#             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#             unzip awscliv2.zip
-#             sudo ./aws/install
-#             aws --version            
-#           fi
-
 #       # - name: Install Docker
 #       #   run: |
 #       #     #!/bin/bash
