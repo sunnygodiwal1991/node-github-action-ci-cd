@@ -17,25 +17,30 @@ jobs:
       #     sudo apt clean
       #     sudo apt update
       #     sudo apt install tree -y  
+  
+  build-1:
+    name: Install AWS-CLI
+    runs-on: self-hosted
 
-      # - name: Install AWS-CLI
-      #   run: |
-      #     #!/bin/bash
-      #     AWS_CLI=$(aws --version 2>&1)
-      #     STATUS=$?         
+    steps:
+      - name: Install AWS-CLI
+        run: |
+          #!/bin/bash
+          AWS_CLI=$(aws --version 2>&1)
+          STATUS=$?         
 
-      #     if [[ $STATUS -eq 0 ]]; then
-      #       echo "✅ AWS CLI detected"
-      #       echo "$AWS_CLI"
-      #     else
-      #       echo "❌ AWS CLI not detected"
-      #       echo "Install AWS CLI on Runner..."
-      #       sudo apt install -y curl unzip less
-      #       curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      #       unzip awscliv2.zip
-      #       sudo ./aws/install
-      #       aws --version            
-      #     fi
+          if [[ $STATUS -eq 0 ]]; then
+            echo "✅ AWS CLI detected"
+            echo "$AWS_CLI"
+          else
+            echo "❌ AWS CLI not detected"
+            echo "Install AWS CLI on Runner..."
+            sudo apt install -y curl unzip less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            aws --version            
+          fi
 
       # - name: Install Docker
       #   run: |
@@ -59,33 +64,33 @@ jobs:
       #       sudo systemctl restart docker           
       #     fi
 
-      - name: Configure AWS creds
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }} 
+      # - name: Configure AWS creds
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }} 
 
-      - name: Validate IAM User
-        run: aws sts get-caller-identity
+      # - name: Validate IAM User
+      #   run: aws sts get-caller-identity
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      # - name: Checkout
+      #   uses: actions/checkout@v4
 
-      - name: Build Docker image (with persistent cache)
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          load: true
-          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # - name: Build Docker image (with persistent cache)
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: .
+      #     load: true
+      #     tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
 
-      - name: Build & Push Image 
-        run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          # docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }} .
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
+      # - name: Build & Push Image 
+      #   run: |
+      #     aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+      #     # docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }} .
+      #     docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
 
       # - name: Deployment via argocd 
       #   run: |
