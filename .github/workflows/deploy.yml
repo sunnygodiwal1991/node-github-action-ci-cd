@@ -79,7 +79,7 @@ jobs:
           name: source
           path: .          
 
-  Build & Tag Docker Image:
+  Build And Tag Docker Image:
     runs-on: self-hosted
     needs: Checkout Source Code
     steps:
