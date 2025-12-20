@@ -67,9 +67,17 @@ jobs:
         run: aws sts get-caller-identity    
                          
 
-  Checkout-Source-Code:
+  Clean-Workspace:
     runs-on: self-hosted
     needs: basic-configuration
+    steps:
+      - name: Clean workspace
+        run: |
+          rm -rf $GITHUB_WORKSPACE/*        
+
+  Checkout-Source-Code:
+    runs-on: self-hosted
+    needs: Clean-Workspace
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4  
