@@ -21,12 +21,8 @@ COPY . .
 ############################
 FROM node:24.12.0-alpine
 
-ARG APP_DIR=/app
-ARG APP_USER=appuser
-
-ENV APP_DIR=${APP_DIR}
-ENV APP_USER=${APP_USER}
-ENV NODE_ENV=production
+ENV APP_DIR="/app" \
+    APP_USER="appuser"
 
 # Create non-root user
 RUN addgroup -S ${APP_USER} \
