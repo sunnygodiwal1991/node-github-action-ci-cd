@@ -3,7 +3,10 @@
 ############################
 FROM node:24.12.0-alpine AS builder
 
-WORKDIR /app
+ENV APP_DIR="/app" \
+    APP_USER="appuser"
+
+WORKDIR ${APP_DIR}
 
 # Copy only dependency files first (better cache)
 COPY package*.json ./
