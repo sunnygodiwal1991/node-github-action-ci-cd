@@ -67,11 +67,11 @@ jobs:
         run: aws sts get-caller-identity    
                          
 
-  Checkout Source Code:
+  Checkout-Source-Code:
     runs-on: self-hosted
     needs: basic-configuration
     steps:
-      - name: Checkout Source Code
+      - name: Checkout-Source-Code
         uses: actions/checkout@v4  
 
       - uses: actions/upload-artifact@v4
@@ -81,7 +81,7 @@ jobs:
 
   # Build And Tag Docker Image:
   #   runs-on: self-hosted
-  #   needs: Checkout Source Code
+  #   needs: Checkout-Source-Code
   #   steps:
   #     - name: Build Docker image (with persistent cache)
   #       uses: docker/build-push-action@v5
