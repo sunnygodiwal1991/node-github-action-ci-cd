@@ -72,8 +72,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image (load locally)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
 
       # - name: Build & Push Image
       #   run: |
