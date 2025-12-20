@@ -3,18 +3,17 @@
 ############################
 FROM node:24.12.0-alpine AS builder
 
-ENV APP_DIR="/app" \
-    APP_USER="appuser"
+ENV APP_DIR="/app"
 
 WORKDIR ${APP_DIR}
 
-# Copy only dependency files first (better cache)
+# Copy dependency files first
 COPY package*.json ./
 
-# Install only production deps
+# Install production deps
 RUN npm ci --production
 
-# Copy app source
+# Copy source code
 COPY . .
 
 ############################
@@ -22,18 +21,26 @@ COPY . .
 ############################
 FROM node:24.12.0-alpine
 
-# Create non-root user (SECURITY 🔐)
-RUN addgroup -S ${APP_USER} && adduser -S ${APP_USER} -G ${APP_USER}
+ARG APP_DIR=/app
+ARG APP_USER=appuser
+
+ENV APP_DIR=${APP_DIR}
+ENV APP_USER=${APP_USER}
+ENV NODE_ENV=production
+
+# Create non-root user
+RUN addgroup -S ${APP_USER} \
+ && adduser -S ${APP_USER} -G ${APP_USER}
 
 WORKDIR ${APP_DIR}
 
-# Copy only required files from builder
+# Copy app from builder
 COPY --from=builder ${APP_DIR} ${APP_DIR}
 
-# Fix ownership
+# Fix permissions
 RUN chown -R ${APP_USER}:${APP_USER} ${APP_DIR}
 
-# Switch to non-root user
+# Switch user
 USER ${APP_USER}
 
 EXPOSE 3000
