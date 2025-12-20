@@ -67,9 +67,16 @@ jobs:
         run: aws sts get-caller-identity    
                          
 
-  build:
+  checout-source-code:
     runs-on: self-hosted
     needs: basic-configuration
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4    
+
+  build:
+    runs-on: self-hosted
+    needs: checout-source-code
     steps:
       - name: Build Docker Image
         run: echo "test"
