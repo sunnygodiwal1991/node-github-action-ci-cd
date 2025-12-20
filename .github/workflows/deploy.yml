@@ -72,16 +72,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run
-        run: npm ci        
+      - name: Build & Push Image
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }} .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
 
-      # - name: Build & Push Image
-      #   run: |
-      #     aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-      #     docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }} .
-      #     docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
-
-      # - name: Deployment via argocd 
-      #   run: |
-      #     argocd login argocd.devsecops.com --username admin --password 3PYl4YwJUDJKp4I3 --insecure
-      #     argocd app sync node-app
+      - name: Deployment via argocd 
+        run: |
+          argocd login argocd.devsecops.com --username admin --password 3PYl4YwJUDJKp4I3 --insecure
+          argocd app sync node-app
