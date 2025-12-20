@@ -1,7 +1,7 @@
 ############################
 # 1️⃣ Builder stage
 ############################
-FROM node:24.12.0-alpine AS builder
+FROM 992528162043.dkr.ecr.us-east-1.amazonaws.com/dev/infra/node:24.12.0-alpine AS builder
 
 ENV APP_DIR="/app"
 
@@ -19,7 +19,7 @@ COPY . .
 ############################
 # 2️⃣ Runtime stage
 ############################
-FROM node:24.12.0-alpine
+FROM 992528162043.dkr.ecr.us-east-1.amazonaws.com/dev/infra/node:24.12.0-alpine
 
 ENV APP_DIR="/app" \
     APP_USER="appuser"
