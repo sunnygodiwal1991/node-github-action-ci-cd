@@ -89,15 +89,23 @@ jobs:
       #     name: source
       #     path: .          
 
+  # Build-And-Tag-Docker-Image:
+  #   runs-on: self-hosted
+  #   needs: Checkout-Source-Code
+  #   steps:
+  #     - name: Build Docker image (with persistent cache)
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: .
+  #         load: true
+  #         tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
+
   Build-And-Tag-Docker-Image:
     runs-on: self-hosted
     needs: Checkout-Source-Code
     steps:
       - name: Build Docker image (with persistent cache)
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          load: true
-          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+        run: |
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }} .
