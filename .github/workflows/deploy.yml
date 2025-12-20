@@ -73,6 +73,8 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4  
+        with:
+          clean: true        
 
       - uses: actions/upload-artifact@v4
         with:
