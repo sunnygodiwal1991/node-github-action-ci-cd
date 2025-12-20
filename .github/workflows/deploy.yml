@@ -72,13 +72,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Docker image (load locally)
+      - name: Build Docker image (with persistent cache)
         uses: docker/build-push-action@v5
         with:
           context: .
           load: true
           tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev/node-app:${{ github.run_number }}
-
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       # - name: Build & Push Image 
       #   run: |
       #     aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
